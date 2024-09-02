@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Cócteles</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .question { margin-bottom: 15px; }
+        button { padding: 10px; background-color: #007BFF; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Generador de Cócteles</h1>
+    <form id="quizForm">
+        <div class="question">
+            <label>¿Prefieres cócteles dulces, amargos o ácidos?</label><br>
+            <select id="flavor">
+                <option value="dulce">Dulce</option>
+                <option value="amargo">Amargo</option>
+                <option value="ácido">Ácido</option>
+            </select>
+        </div>
+        <div class="question">
+            <label>¿Qué tipo de licor prefieres?</label><br>
+            <select id="base">
+                <option value="vodka">Vodka</option>
+                <option value="whisky">Whisky</option>
+                <option value="ron">Ron</option>
+                <option value="ginebra">Ginebra</option>
+            </select>
+        </div>
+        <button type="button" onclick="generateCocktail()">Generar Cóctel</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        function generateCocktail() {
+            const flavor = document.getElementById('flavor').value;
+            const base = document.getElementById('base').value;
+
+            fetch('/generate-cocktail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ flavor, base })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `<h2>Tu Cóctel Recomendado</h2><p>${data.cocktail}</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
