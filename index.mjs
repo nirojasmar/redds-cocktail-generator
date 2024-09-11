@@ -20,7 +20,7 @@ const cocktails = [
 
 
 app.post('/generate-cocktail', async (req, res) => {
-    const { flavor, base } = req.body;
+    const { flavor, type } = req.body;
 
     const cocktailOptions = cocktails.map(c => `${c.name}: ${c.description}`).join('\n');
 
@@ -31,7 +31,7 @@ app.post('/generate-cocktail', async (req, res) => {
                 { role: 'system', content: `Eres un asistente especializado en cocteles. Elige o adapta una receta de cóctel basandote en estas opciones:\n\n ${cocktailOptions} \n` },
                 {
                     role: 'user',
-                    content: `Quiero un cóctel ${flavor} y a base de ${base}.`
+                    content: `Quiero un cóctel ${flavor} y ${type}.`
                 }
             ]
         });

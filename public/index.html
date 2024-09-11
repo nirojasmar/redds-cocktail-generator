@@ -6,58 +6,128 @@
     <link href="/css/tailwind.css" rel="stylesheet">
     <title>Generador de Cócteles</title>
 </head>
-<body class="min-h-screen bg-amber-100">
+<body class="min-h-screen bg-gradient-to-tr from-green-200 to-amber-100">
     <!-- Navbar -->
-    <header class="bg-green-500 text-white sticky top-0 z-10">
+    <header class="bg-green-600 text-white sticky opacity-85 top-0 z-10">
         <section class="max-w-4xl mx-auto p-4 flex justify-between items-center">
             <h1 class="text-3xl font-medium">
-                <a href="/">🍸 Generador de Cócteles</a>
+                <a href="/">🍸 Generador de Cócteles Redd's</a>
             </h1>
         </section>
     </header>
 
-    <h2 class="text-3xl font-bold mb-8 text-center">Generador de Cócteles</h2>
+    <div class="mb-8"></div>
 
+    <div class="p-4 mx-auto max-w-4xl">
+        <h2 class="text-3xl font-bold mb-8 text-center">Generador de Cócteles</h2>
+        <h5 class="text-slate-600 leading-normal font-medium text-center text-xl sm:text-2xl sm:text-left">Bienvenido al Generador de Cócteles de Redd's, te vamos a hacer algunas preguntas sobre tus preferencias, personalidad y sobre lo que te hace único, luego de esto, nuestra IA te ofrecerá la receta de coctel con Redd's que más se parece a tí, disfrútalo <span class="text-green-700">sin amarguras</span> </h5>
+    </div>
 
-    <form id="quizForm">
-        <div class="question mb-4">
-            <label>¿Prefieres cócteles dulces o ácidos?</label><br>
-            <select id="flavor">
-                <option value="dulce">Dulce</option>
-                <option value="ácido">Ácido</option>
-            </select>
+    <div class="container mx-auto py-10">
+        <h2 class="text-3xl font-bold mb-8 text-center">¿Prefieres cócteles dulces o ácidos?</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="flavor-dulce" class="border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectFlavor('Dulce')">
+                <h3 class="text-xl font-semibold">Dulce</h3>
+            </div>
+            
+            <!-- Opción 2 -->
+            <div id="flavor-acido" class="border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectFlavor('Acido')">
+                <h3 class="text-xl font-semibold">Ácido</h3>
+            </div> 
         </div>
-        <div class="question mb-4">
-            <label>¿Qué tipo de licor prefieres?</label><br>
-            <select id="base">
-                <option value="vodka">Vodka</option>
-                <option value="whisky">Whisky</option>
-                <option value="ron">Ron</option>
-                <option value="ginebra">Ginebra</option>
-            </select>
+
+        <div class="mb-4"></div>
+        <h2 class="text-3xl font-bold mb-8 text-center">¿Prefieres un cóctel tradicional o atrevido?</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="type-tradicional" class="border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectType('Tradicional')">
+                <h3 class="text-xl font-semibold">Tradicional</h3>
+            </div>
+            
+            <!-- Opción 2 -->
+            <div id="type-atrevido" class="border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectType('Atrevido')">
+                <h3 class="text-xl font-semibold">Atrevido</h3>
+            </div> 
         </div>
-        <button class="px-4 py-2 bg-blue-500 text-white border-none cursor-pointer hover:bg-blue-700" type="button" onclick="generateCocktail()">Generar Cóctel</button>
-    </form>
-    
+
+        <div class="mb-5"></div>
+
+        <div id="alert" class="hidden mb-3">
+            <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                Error
+            </div>
+            <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+                Por favor responde todas las preguntas.
+            </div>
+        </div>
+        
+        <button class="bg-green-700 hover:bg-successActive text-white text-sm py-2.5 px-5 mr-2 mb-2 rounded-xl shadow-md hover:rotate-3 transition duration-300" onclick="generateCocktail()">Generar Cóctel</button>
+    </div>
+
     <div id="result"></div>
 
     <script>
-        function generateCocktail() {
-            const flavor = document.getElementById('flavor').value;
-            const base = document.getElementById('base').value;
+        let selectedFlavor = '';
+        let selectedType = '';
 
-            fetch('/generate-cocktail', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ flavor, base })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('result').innerHTML = `<h2>Tu Cóctel Recomendado</h2><p>${data.cocktail}</p>`;
-            });
+    function selectFlavor(flavor) {
+        selectedFlavor = flavor;
+
+        // Remove selected class from all type options
+        document.getElementById('flavor-dulce').classList.remove('bg-green-600', 'text-white');
+        document.getElementById('flavor-acido').classList.remove('bg-green-600', 'text-white');
+
+        // Add selected class to the clicked option
+        if (flavor === 'Dulce') {
+            document.getElementById('flavor-dulce').classList.add('bg-green-600', 'text-white');
+        } else if (flavor === 'Acido') {
+            document.getElementById('flavor-acido').classList.add('bg-green-600', 'text-white');
         }
+    }
+
+    function selectType(type) {
+        selectedType = type;
+
+        // Remove selected class from all type options
+        document.getElementById('type-tradicional').classList.remove('bg-green-600', 'text-white');
+        document.getElementById('type-atrevido').classList.remove('bg-green-600', 'text-white');
+
+        // Add selected class to the clicked option
+        if (type === 'Tradicional') {
+            document.getElementById('type-tradicional').classList.add('bg-green-600', 'text-white');
+        } else if (type === 'Atrevido') {
+            document.getElementById('type-atrevido').classList.add('bg-green-600', 'text-white');
+        }
+    }
+
+    function generateCocktail() {
+        if (!selectedFlavor || !selectedType) {
+            const alert = document.getElementById('alert');
+            alert.classList.remove('hidden');
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 3000); // Ocultar la alerta después de 3 segundos
+            return;
+        }
+
+        fetch('/generate-cocktail', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ flavor: selectedFlavor, type: selectedType })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const content = data.cocktail;
+            const [description, recipe] = content.split('### Ingredientes');
+            document.getElementById('result').innerHTML = `<h2>Tu Cóctel Recomendado</h2><p>${content}</p>`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
     </script>
 </body>
 </html>
