@@ -1,0 +1,5 @@
+{
+    "watch": ["index.mjs", "routes/", "controllers/"],
+    "ignore": ["public/"],
+    "ext": "js,json"
+  }
