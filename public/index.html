@@ -50,6 +50,40 @@
         </div>
 
         <div class="mb-4"></div>
+        <h2 class="text-3xl font-bold mb-8 text-center">¿Cómo prefieres celebrar una ocasión especial?</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div id="mood-intimo" class="mood-card border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectMood('Intimo')">
+                <h3 class="text-xl font-semibold">Con una cena íntima y planificada</h3>
+            </div>
+            
+            <div id="mood-divertido" class="mood-card border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectMood('Divertido')">
+                <h3 class="text-xl font-semibold">Con una fiesta grande y divertida</h3>
+            </div>
+
+            <div id="mood-relajado" class="mood-card border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectMood('Relajado')">
+                <h3 class="text-xl font-semibold">Con una reunión relajada en casa</h3>
+            </div>
+        </div>
+
+        <div class="mb-4"></div>
+        <h2 class="text-3xl font-bold mb-8 text-center">¿Qué tipo de compañia prefieres en una noche de cócteles?</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div id="company-solo" class="company-card border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectCompany('solo')">
+                <h3 class="text-xl font-semibold">Solo o con un grupo pequeño de amigos cercanos</h3>
+            </div>
+            
+            <div id="company-pareja" class="company-card border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectCompany('pareja')">
+                <h3 class="text-xl font-semibold">Con mi pareja en una cita romántica</h3>
+            </div>
+
+            <div id="company-multitud" class="company-card border rounded-lg p-6 bg-white shadow-md cursor-pointer hover:bg-green-600 hover:text-white transition-colors" onclick="selectCompany('multitud')">
+                <h3 class="text-xl font-semibold">Con una multitud de amigos y conocidos</h3>
+            </div>
+        </div>
+
+        <div class="mb-4"></div>
 
         <div id="alert" class="hidden mb-3">
             <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
@@ -73,6 +107,14 @@
             <button class="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700" onclick="closeModal()">Cerrar</button>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-10">
+        <div class="container mx-auto text-center">
+            <p class="mb-2">Contacto: nirojasmar@gmail.com</p>
+            <p>&copy; 2024 Redd's Cocktail Generator. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script>
         let selectedFlavor = '';
@@ -100,6 +142,37 @@
 
             // Add selected class to the clicked option
             document.getElementById(`type-${type.toLowerCase()}`).classList.add('bg-green-600', 'text-white');
+        }
+
+        function selectMood(mood){
+            selectedMood = mood;
+
+            // Remove selected class from all mood options
+            document.querySelectorAll('.mood-card').forEach(card => {
+                card.classList.remove('bg-green-600', 'text-white');
+            });
+
+            // Add selected class to the clicked option
+            document.getElementById(`mood-${mood.toLowerCase()}`).classList.add('bg-green-600', 'text-white');
+        }
+
+        function selectCompany(company){
+
+            // Remove selected class from all company options
+            document.querySelectorAll('.company-card').forEach(card => {
+                card.classList.remove('bg-green-600', 'text-white');
+            });
+
+            // Add selected class to the clicked option
+            document.getElementById(`company-${company.toLowerCase()}`).classList.add('bg-green-600', 'text-white');
+
+            if(company == 'solo'){
+                selectedCompany = 'Solo o con un grupo pequeño de amigos cercanos';
+            } else if(company == 'pareja'){
+                selectedCompany = 'Con mi pareja en una cita romántica';
+            } else if(company == 'multitud'){
+                selectedCompany = 'Con grupos grandes de amigos y conocidos';
+            }
         }
 
         function showAlert(message) {
@@ -139,7 +212,7 @@
 
         function generateCocktail() {
 
-            if (!selectedFlavor || !selectedType) {
+            if (!selectedFlavor || !selectedType || !selectedMood || !selectedCompany) {
                 const alert = document.getElementById('alert');
                 alert.classList.remove('hidden');
                 setTimeout(() => {
@@ -153,7 +226,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ flavor: selectedFlavor, type: selectedType })
+                body: JSON.stringify({ flavor: selectedFlavor, type: selectedType, mood: selectedMood, company: selectedCompany })
             })
             .then(response => response.json())
             .then(data => {
