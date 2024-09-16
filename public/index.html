@@ -99,11 +99,11 @@
 
     <!-- Modal -->
     <div id="cocktailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg p-8 max-w-lg mx-auto">
+        <div class="bg-gradient-to-tr from-white to-blue-300 rounded-lg p-8 max-w-lg mx-auto max-h-screen overflow-y-auto">
             <h2 class="text-2xl font-bold mb-4">Tu Cóctel Recomendado</h2>
-            <div id="modalDescription"></div>
-            <div id="modalRecipe" class="hidden"></div>
-            <button id="toggleButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onclick="toggleRecipe()">Ver Receta</button>
+            <div id="modalDescription" class="prose"></div>
+            <div id="modalRecipe" class="prose hidden"></div>
+            <button id="toggleButton" class="mt-4 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700" onclick="toggleRecipe()">Ver Receta</button>
             <button class="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700" onclick="closeModal()">Cerrar</button>
         </div>
     </div>
@@ -115,6 +115,8 @@
             <p>&copy; 2024 Redd's Cocktail Generator. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script>
         let selectedFlavor = '';
@@ -185,8 +187,11 @@
         }
 
         function openModal(description, recipe) {
-            document.getElementById('modalDescription').innerHTML = description;
-            document.getElementById('modalRecipe').innerHTML = recipe;
+            description = description.replace(/\n\n/g, '<br><br>');
+            recipe = recipe.replace(/\n\n/g, '<br><br>');
+
+            document.getElementById('modalDescription').innerHTML = marked.parse(description);
+            document.getElementById('modalRecipe').innerHTML = marked.parse(recipe);
             document.getElementById('cocktailModal').classList.remove('hidden');
         }
 
@@ -231,8 +236,9 @@
             .then(response => response.json())
             .then(data => {
                 const content = data.cocktail;
+                console.log(content);
                 const [description, recipe] = content.split('### Ingredientes');
-                openModal(description.trim().replace('*', ''), `### Ingredientes${recipe.trim().replace('#', '')}`);
+                openModal(description.trim(), `### Ingredientes${recipe.trim()}`);
             })
             .catch(error => {
                 console.error('Error:', error);

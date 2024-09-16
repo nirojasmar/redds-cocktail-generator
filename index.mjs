@@ -31,13 +31,12 @@ app.post('/generate-cocktail', async (req, res) => {
                 { role: 'system', content: `Eres un asistente especializado en cocteles. Elige o adapta una receta de cóctel basandote en estas opciones:\n\n ${cocktailOptions} \n` },
                 {
                     role: 'user',
-                    content: `Quiero un cóctel ${flavor}, ${type}, ${mood} y que se comparta ${company}.`
+                    content: `Quiero un cóctel ${flavor}, ${type}, ${mood} y que se comparta ${company}. \n\n Formato: \n\n **Nombre del cóctel**: \n\n ###Ingredientes \n\n Inserta Ingredientes aqui \n\n  ###Preparación \n\n Inserta datos sobre la preparación aqui.`
                 }
             ]
         });
 
         const cocktail = response.choices[0].message.content;
-        console.log(cocktail);
         res.json({ cocktail });
     } catch (error) {
         console.error(error);
